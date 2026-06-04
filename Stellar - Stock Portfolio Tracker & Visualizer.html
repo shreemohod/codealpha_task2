@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<!-- saved from url=(0085)file:///C:/Users/shree/.gemini/antigravity/scratch/stock-portfolio-tracker/index.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A premium, glassmorphic Stock Portfolio Tracker that visualizes holdings, tracks total investment values, manages prices, and exports CSV reports.">
+    <title>Stellar - Stock Portfolio Tracker &amp; Visualizer</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <link href="./Stellar - Stock Portfolio Tracker &amp; Visualizer_files/css2" rel="stylesheet">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="./Stellar - Stock Portfolio Tracker &amp; Visualizer_files/styles.css">
+</head>
+<body>
+    <!-- Background visual accents -->
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
+    
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header animate-fade-in">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="1" x2="12" y2="23"></line>
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h1>STELLAR</h1>
+                    <span>Portfolio Tracker</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button id="btn-manage-prices" class="btn btn-secondary" title="Edit stock prices list">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+                    Market Prices
+                </button>
+            </div>
+        </header>
+
+        <!-- Metrics Overview Panel -->
+        <section class="metrics-grid animate-slide-up">
+            <!-- Metric 1: Total Portfolio Value -->
+            <div class="metric-card glass-panel" id="metric-total-value">
+                <div class="metric-info">
+                    <h3>Total Portfolio Value</h3>
+                    <div class="metric-value" id="val-total-portfolio">₹1,64,500.00</div>
+                    <p class="metric-subtitle">Based on active holdings &amp; market rates</p>
+                </div>
+                <div class="metric-icon val-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                </div>
+            </div>
+
+            <!-- Metric 2: Total Holdings Count -->
+            <div class="metric-card glass-panel" id="metric-holdings-count">
+                <div class="metric-info">
+                    <h3>Assets Tracked</h3>
+                    <div class="metric-value" id="val-total-assets">4</div>
+                    <p class="metric-subtitle">Unique stock tickers in portfolio</p>
+                </div>
+                <div class="metric-icon count-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+                </div>
+            </div>
+
+            <!-- Metric 3: Top Allocation -->
+            <div class="metric-card glass-panel" id="metric-top-holding">
+                <div class="metric-info">
+                    <h3>Top Holding</h3>
+                    <div class="metric-value" id="val-top-asset">TCS</div>
+                    <p class="metric-subtitle" id="val-top-asset-pct">35.1% of portfolio</p>
+                </div>
+                <div class="metric-icon top-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Workspace -->
+        <main class="workspace-grid animate-slide-up-delayed">
+            <!-- Left Side: Form and Active Price Reference -->
+            <div class="workspace-left">
+                <!-- Add Transaction Card -->
+                <div class="glass-panel card-panel">
+                    <div class="card-header">
+                        <h2>Execute Transaction</h2>
+                        <p>Buy or sell shares to update your active investment allocation</p>
+                    </div>
+                    <form id="form-holding" class="transaction-form">
+                        <div class="form-group">
+                            <label for="select-action">Transaction Type</label>
+                            <div class="select-wrapper">
+                                <select id="select-action" required="">
+                                    <option value="buy" selected="">Buy / Add Shares</option>
+                                    <option value="sell">Sell / Subtract Shares</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="select-stock">Select Ticker</label>
+                            <div class="select-wrapper">
+                                <select id="select-stock" required=""><option value="" disabled="" selected="">Choose a stock...</option><option value="BHARTIARTL">BHARTIARTL (₹1,380.00)</option><option value="HDFCBANK">HDFCBANK (₹1,520.00)</option><option value="ICICIBANK">ICICIBANK (₹1,120.00)</option><option value="INFY">INFY (₹1,450.00)</option><option value="ITC">ITC (₹430.00)</option><option value="LT">LT (₹3,550.00)</option><option value="RELIANCE">RELIANCE (₹2,900.00)</option><option value="SBIN">SBIN (₹830.00)</option><option value="TATAMOTORS">TATAMOTORS (₹960.00)</option><option value="TCS">TCS (₹3,850.00)</option></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="input-qty">Quantity of Shares</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="input-qty" min="0.0001" step="any" placeholder="e.g. 10.5" required="">
+                                <span class="input-suffix">shares</span>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" id="btn-update-holdings" class="btn btn-primary">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                Execute Transaction
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Export Portfolio -->
+                <div class="glass-panel card-panel export-panel">
+                    <div class="card-header">
+                        <h2>Export &amp; Backup</h2>
+                        <p>Save your portfolio summaries offline for tracking</p>
+                    </div>
+                    <div class="export-buttons">
+                        <button id="btn-export-csv" class="btn btn-export">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                            Export to CSV
+                        </button>
+                        <button id="btn-export-txt" class="btn btn-export">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                            Download Text File
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Holdings Table and Visual Chart -->
+            <div class="workspace-right">
+                <!-- Visual Allocation Chart -->
+                <div class="glass-panel card-panel chart-panel">
+                    <div class="card-header">
+                        <h2>Allocation Breakdown</h2>
+                        <p>Visualizing shares percentage value relative to total portfolio</p>
+                    </div>
+                    <div class="chart-content">
+                        <div class="svg-chart-container">
+                            <svg id="donut-chart" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="transparent" stroke="#101726" stroke-width="8"></circle><circle cx="50" cy="50" r="40" fill="transparent" stroke="hsl(195, 100%, 48%)" stroke-width="8" stroke-dasharray="88.23196388805377 251.32741228718345" stroke-dashoffset="0" style="transition: stroke-dashoffset 0.8s ease-in-out;"></circle><circle cx="50" cy="50" r="40" fill="transparent" stroke="hsl(270, 95%, 68%)" stroke-width="8" stroke-dasharray="63.40478790223777 251.32741228718345" stroke-dashoffset="-88.23196388805377" style="transition: stroke-dashoffset 0.8s ease-in-out;"></circle><circle cx="50" cy="50" r="40" fill="transparent" stroke="hsl(145, 80%, 45%)" stroke-width="8" stroke-dasharray="55.38370027605105 251.32741228718345" stroke-dashoffset="-151.63675179029153" style="transition: stroke-dashoffset 0.8s ease-in-out;"></circle><circle cx="50" cy="50" r="40" fill="transparent" stroke="hsl(38, 92%, 50%)" stroke-width="8" stroke-dasharray="44.30696022084085 251.32741228718345" stroke-dashoffset="-207.02045206634259" style="transition: stroke-dashoffset 0.8s ease-in-out;"></circle></svg>
+                            <div class="chart-inner-text">
+                                <span class="chart-inner-val" id="chart-center-val">₹1,64,500.00</span>
+                                <span class="chart-inner-lbl">Total</span>
+                            </div>
+                        </div>
+                        <div class="chart-legend" id="chart-legend-container"><div class="chart-legend-item">
+            <div class="legend-left">
+                <span class="legend-color" style="background-color: hsl(195, 100%, 48%);"></span>
+                <span class="legend-name">TCS</span>
+            </div>
+            <span class="legend-pct">35.1%</span>
+        </div><div class="chart-legend-item">
+            <div class="legend-left">
+                <span class="legend-color" style="background-color: hsl(270, 95%, 68%);"></span>
+                <span class="legend-name">SBIN</span>
+            </div>
+            <span class="legend-pct">25.2%</span>
+        </div><div class="chart-legend-item">
+            <div class="legend-left">
+                <span class="legend-color" style="background-color: hsl(145, 80%, 45%);"></span>
+                <span class="legend-name">INFY</span>
+            </div>
+            <span class="legend-pct">22.0%</span>
+        </div><div class="chart-legend-item">
+            <div class="legend-left">
+                <span class="legend-color" style="background-color: hsl(38, 92%, 50%);"></span>
+                <span class="legend-name">RELIANCE</span>
+            </div>
+            <span class="legend-pct">17.6%</span>
+        </div></div>
+                    </div>
+                </div>
+
+                <!-- Table Card -->
+                <div class="glass-panel card-panel table-panel">
+                    <div class="card-header">
+                        <h2>Active Portfolio Holdings</h2>
+                        <p>Detailed overview of quantity, live market prices, and total value</p>
+                    </div>
+                    <div class="table-wrapper">
+                        <table id="table-portfolio" style="display: table;">
+                            <thead>
+                                <tr>
+                                    <th>Asset</th>
+                                    <th>Quantity</th>
+                                    <th class="num-col">Market Price</th>
+                                    <th class="num-col">Current Value</th>
+                                    <th class="num-col">Allocation</th>
+                                    <th class="action-col"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="portfolio-list"><tr>
+            <td style="font-weight: 700; color: var(--primary);">TCS</td>
+            <td>15</td>
+            <td class="num-col">₹3,850.00</td>
+            <td class="num-col val-col">₹57,750.00</td>
+            <td class="num-col" style="font-weight: 600;">35.1%</td>
+            <td class="action-col">
+                <button class="btn-delete" onclick="removeHolding(&#39;TCS&#39;)" title="Remove holding">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                </button>
+            </td>
+        </tr><tr>
+            <td style="font-weight: 700; color: var(--primary);">SBIN</td>
+            <td>50</td>
+            <td class="num-col">₹830.00</td>
+            <td class="num-col val-col">₹41,500.00</td>
+            <td class="num-col" style="font-weight: 600;">25.2%</td>
+            <td class="action-col">
+                <button class="btn-delete" onclick="removeHolding(&#39;SBIN&#39;)" title="Remove holding">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                </button>
+            </td>
+        </tr><tr>
+            <td style="font-weight: 700; color: var(--primary);">INFY</td>
+            <td>25</td>
+            <td class="num-col">₹1,450.00</td>
+            <td class="num-col val-col">₹36,250.00</td>
+            <td class="num-col" style="font-weight: 600;">22.0%</td>
+            <td class="action-col">
+                <button class="btn-delete" onclick="removeHolding(&#39;INFY&#39;)" title="Remove holding">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                </button>
+            </td>
+        </tr><tr>
+            <td style="font-weight: 700; color: var(--primary);">RELIANCE</td>
+            <td>10</td>
+            <td class="num-col">₹2,900.00</td>
+            <td class="num-col val-col">₹29,000.00</td>
+            <td class="num-col" style="font-weight: 600;">17.6%</td>
+            <td class="action-col">
+                <button class="btn-delete" onclick="removeHolding(&#39;RELIANCE&#39;)" title="Remove holding">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                </button>
+            </td>
+        </tr></tbody>
+                        </table>
+                        <div id="empty-state" class="empty-state-container" style="display: none;">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                            <p>No active stock holdings found. Use the panel on the left to start tracking!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal: Manage Market Prices Dictionary -->
+    <div id="modal-prices" class="modal-overlay">
+        <div class="modal-container glass-panel">
+            <header class="modal-header">
+                <h2>Manage Market Prices Dictionary</h2>
+                <button id="btn-close-modal" class="btn-close">×</button>
+            </header>
+            <div class="modal-body">
+                <p class="modal-description">This mimics the hardcoded database dictionary structure in memory. You can add new stock keys or update prices here.</p>
+                
+                <div class="prices-editor-grid">
+                    <!-- Column 1: Add New Ticker -->
+                    <div class="add-price-section">
+                        <h3>Define Ticker</h3>
+                        <form id="form-dict-price" class="modal-form">
+                            <div class="form-group">
+                                <label for="dict-ticker">Stock Symbol</label>
+                                <input type="text" id="dict-ticker" placeholder="e.g. MSFT" required="">
+                            </div>
+                            <div class="form-group">
+                                <label for="dict-price">Market Value ($)</label>
+                                <input type="number" id="dict-price" min="0.01" step="any" placeholder="e.g. 420.50" required="">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-full-width">
+                                Save to Dictionary
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Column 2: Current Dictionary Values -->
+                    <div class="current-prices-section">
+                        <h3>Active Dictionary</h3>
+                        <div class="dict-list-wrapper">
+                            <ul id="dict-prices-list">
+                                <!-- Dynamic price keys loaded by JS -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast-notification">Successfully saved!</div>
+
+    <!-- JS Logic -->
+    <script src="./Stellar - Stock Portfolio Tracker &amp; Visualizer_files/app.js"></script>
+
+
+</body></html>
